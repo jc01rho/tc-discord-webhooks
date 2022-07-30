@@ -34,7 +34,9 @@ import jetbrains.buildServer.tests.TestName;
 import jetbrains.buildServer.users.NotificatorPropertyKey;
 import jetbrains.buildServer.users.PropertyKey;
 import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.vcs.VcsRoot;
+import jetbrains.buildServer.vcs.VcsRootInstanceEntry;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The {@link Notificator} service that handles triggered notifications
@@ -178,15 +181,24 @@ public class DiscordNotificator implements Notificator {
         discordEmbedFields.add(new DiscordEmbedField("Build:", sRunningBuild.getBuildTypeName(), true));
         // Branch
         Branch branch = sRunningBuild.getBranch();
-        String branchName = "Default";
-        if (branch != null && !branch.getName().equals(Branch.DEFAULT_BRANCH_NAME)) {
-            branchName = branch.getDisplayName();
+        String branchName = "Unknown";
+        if (branch != null) {
+            branchName = branch.getDisplayName() + (branch.getName().equals(Branch.DEFAULT_BRANCH_NAME) ? " (Default)" : "");
         }
         discordEmbedFields.add(new DiscordEmbedField("Branch", branchName, true));
         Comment comment = sRunningBuild.getBuildComment();
         if(comment != null) {
             discordEmbedFields.add(new DiscordEmbedField("Comment", comment.getComment(), false));
         }
+        long time = sRunningBuild.getElapsedTime();
+        String timeString = "Unknown";
+        if (time > 0) {
+            timeString = String.format("%d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(time),
+                    TimeUnit.MILLISECONDS.toMinutes(time) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(time) % TimeUnit.MINUTES.toSeconds(1));
+        }
+        discordEmbedFields.add(new DiscordEmbedField("Time Spent", timeString, true));
+
         return discordEmbedFields.toArray(new DiscordEmbedField[0]);
     }
 
@@ -194,6 +206,17 @@ public class DiscordNotificator implements Notificator {
     public void notifyBuildStarted(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build started";
         String description = "A build with the ID " + sRunningBuild.getBuildId() + " has been started!";
+        List<SVcsModification> modifications = sRunningBuild.getContainingChanges();
+        if (modifications != null && !modifications.isEmpty()) {
+            description += "\n**Changes:**\n";
+            for (SVcsModification modification : modifications) {
+                String descriptionPart = modification.getDescription();
+                if (descriptionPart.length() > 47) {
+                    descriptionPart = descriptionPart.substring(0, 47) + "...";
+                }
+                description += "* `" + modification.getVersion() + "`" + (!descriptionPart.isEmpty() ? " - " + descriptionPart : "") + "\n";
+            }
+        }
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
