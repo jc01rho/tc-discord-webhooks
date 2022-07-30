@@ -214,7 +214,8 @@ public class DiscordNotificator implements Notificator {
                 if (descriptionPart.length() > 47) {
                     descriptionPart = descriptionPart.substring(0, 47) + "...";
                 }
-                description += "* `" + modification.getVersion() + "`" + (!descriptionPart.isEmpty() ? " - " + descriptionPart : "") + "\n";
+                String shortHash = modification.getVersion().substring(0, 7);
+                description += "* `" + shortHash + "`" + (!descriptionPart.isEmpty() ? " - " + descriptionPart : "") + "\n";
             }
         }
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
