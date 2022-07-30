@@ -205,7 +205,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildStarted(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build started";
-        String description = "A build with the ID " + sRunningBuild.getBuildId() + " has been started!";
+        String description = "A build with the number " + sRunningBuild.getBuildNumber() + " has been started!";
         List<SVcsModification> modifications = sRunningBuild.getContainingChanges();
         if (modifications != null && !modifications.isEmpty()) {
             description += "\n**Changes:**\n";
@@ -238,7 +238,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildSuccessful(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build succeeded!";
-        String description = "The build with the ID " + sRunningBuild.getBuildId() + " has succeeded!";
+        String description = "The build with the number " + sRunningBuild.getBuildNumber() + " has succeeded!";
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
@@ -259,7 +259,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildFailed(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build failed";
-        String description = "The build with the ID " + sRunningBuild.getBuildId() + " has failed!";
+        String description = "The build with the number " + sRunningBuild.getBuildNumber() + " has failed!";
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
@@ -280,7 +280,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildFailedToStart(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build failed to start";
-        String description = "The build with the ID " + sRunningBuild.getBuildId() + " has failed to start!";
+        String description = "The build with the number " + sRunningBuild.getBuildNumber() + " has failed to start!";
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
@@ -322,7 +322,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildFailing(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build is failing";
-        String description = "The build with the ID " + sRunningBuild.getBuildId() + " is failing!";
+        String description = "The build with the number " + sRunningBuild.getBuildNumber() + " is failing!";
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
@@ -343,7 +343,7 @@ public class DiscordNotificator implements Notificator {
     @Override
     public void notifyBuildProbablyHanging(@NotNull SRunningBuild sRunningBuild, @NotNull Set<SUser> users) {
         String title = "Build is probably hanging";
-        String description = "The build with the ID " + sRunningBuild.getBuildId() + " is probably hanging!";
+        String description = "The build with the number " + sRunningBuild.getBuildNumber() + " is probably hanging!";
         String url = this.sBuildServer.getRootUrl() + "/viewLog.html?buildId=" + sRunningBuild.getBuildId();
         DiscordWebHookPayload discordWebHookPayload = new DiscordWebHookPayload();
         discordWebHookPayload.setEmbeds(new DiscordEmbed[]{
