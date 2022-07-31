@@ -167,7 +167,7 @@ public class DiscordNotificator implements Notificator {
      * @param sRunningBuild The build from which the fields will be build
      * @return The {@link DiscordEmbedField}'s created from the {@link SRunningBuild}
      */
-    private DiscordEmbedField[] buildFieldsForRunningBuild(SRunningBuild sRunningBuild) {
+    private DiscordEmbedField[] buildFieldsForRunningBuild(SRunningBuild sRunningBuild, boolean... starting) {
         List<DiscordEmbedField> discordEmbedFields = new ArrayList<>();
         // Grab data
         // Project
@@ -201,14 +201,23 @@ public class DiscordNotificator implements Notificator {
             }
         } else trigger = triggeredBy.getAsString();
         discordEmbedFields.add(new DiscordEmbedField("Triggered by", trigger, true));
-        long time = sRunningBuild.getElapsedTime();
-        String timeString = "Unknown";
-        if (time > 0) {
-            timeString = String.format("%d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(time),
-                    TimeUnit.MILLISECONDS.toMinutes(time) % TimeUnit.HOURS.toMinutes(1),
-                    TimeUnit.MILLISECONDS.toSeconds(time) % TimeUnit.MINUTES.toSeconds(1));
+        if (starting == null || starting.length == 0) {
+            long timeSeconds = sRunningBuild.getElapsedTime(); // in seconds
+            String timeString = "";
+            //format it as 1h 30m 20s
+            if (timeSeconds > 3600) {
+                timeString += timeSeconds / 3600 + "h ";
+                timeSeconds %= 3600;
+            }
+            if (timeSeconds > 60) {
+                timeString += timeSeconds / 60 + "m ";
+                timeSeconds %= 60;
+            }
+            if (timeSeconds > 0) {
+                timeString += timeSeconds + "s";
+            }
+            discordEmbedFields.add(new DiscordEmbedField("Time Spent", timeString, true));
         }
-        discordEmbedFields.add(new DiscordEmbedField("Time Spent", timeString, true));
 
         return discordEmbedFields.toArray(new DiscordEmbedField[0]);
     }
