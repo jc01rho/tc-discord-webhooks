@@ -249,7 +249,7 @@ public class DiscordNotificator implements Notificator {
                         null,
                         null,
                         null,
-                        buildFieldsForRunningBuild(sRunningBuild)
+                        buildFieldsForRunningBuild(sRunningBuild, true)
                 )
         });
         this.processNotify(discordWebHookPayload, users);
@@ -312,7 +312,7 @@ public class DiscordNotificator implements Notificator {
                         null,
                         null,
                         null,
-                        buildFieldsForRunningBuild(sRunningBuild)
+                        buildFieldsForRunningBuild(sRunningBuild, true)
                 )
         });
         this.processNotify(discordWebHookPayload, users);
