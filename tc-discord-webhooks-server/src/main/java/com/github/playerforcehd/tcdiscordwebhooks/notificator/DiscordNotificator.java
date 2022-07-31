@@ -190,6 +190,17 @@ public class DiscordNotificator implements Notificator {
         if(comment != null) {
             discordEmbedFields.add(new DiscordEmbedField("Comment", comment.getComment(), false));
         }
+        TriggeredBy triggeredBy = sRunningBuild.getTriggeredBy();
+        String trigger;
+        if (triggeredBy.isTriggeredByUser()) {
+            SUser user = triggeredBy.getUser();
+            if (user != null) {
+                trigger = "User: " + user.getName();
+            } else {
+                trigger = "User: Unknown";
+            }
+        } else trigger = triggeredBy.getAsString();
+        discordEmbedFields.add(new DiscordEmbedField("Triggered by", trigger, true));
         long time = sRunningBuild.getElapsedTime();
         String timeString = "Unknown";
         if (time > 0) {
