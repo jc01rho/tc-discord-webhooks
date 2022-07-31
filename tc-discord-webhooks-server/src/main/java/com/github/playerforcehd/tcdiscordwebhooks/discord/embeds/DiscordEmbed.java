@@ -73,6 +73,9 @@ public class DiscordEmbed {
      */
     private DiscordEmbedField[] fields;
 
+    //Add timestamp, formatted as 2015-12-31T12:00:00.000Z
+    private String timestamp;
+
     public DiscordEmbed(String title, String description, String url, int color, DiscordEmbedFooter footer, DiscordEmbedImage image, DiscordEmbedImage thumbnail, DiscordEmbedField[] fields) {
         this.title = title;
         this.description = description;
@@ -82,6 +85,7 @@ public class DiscordEmbed {
         this.image = image;
         this.thumbnail = thumbnail;
         this.fields = fields;
+        setTimestamp();
     }
 
     public DiscordEmbed(String title, String description, String url, int color, DiscordEmbedFooter footer, DiscordEmbedImage thumbnail, DiscordEmbedField[] fields) {
@@ -92,6 +96,7 @@ public class DiscordEmbed {
         this.footer = footer;
         this.thumbnail = thumbnail;
         this.fields = fields;
+        setTimestamp();
     }
 
     public DiscordEmbed(String title, String description, String url, int color, DiscordEmbedFooter footer, DiscordEmbedField[] fields) {
@@ -101,9 +106,25 @@ public class DiscordEmbed {
         this.color = color;
         this.footer = footer;
         this.fields = fields;
+        setTimestamp();
     }
 
     public DiscordEmbed() {
+        setTimestamp();
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    //set timestamp from today
+    public void setTimestamp() {
+        // Formatted as 2015-12-31T12:00:00.000Z
+        setTimestamp(new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new java.util.Date())); // Hacky way of doing it because im lazy
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getTitle() {

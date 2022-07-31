@@ -72,7 +72,8 @@ public class DiscordWebHookTest {
             "                    \"value\": \"This is an embedded field!\",\n" +
             "                    \"inline\": false\n" +
             "                }\n" +
-            "            ]\n" +
+            "            ],\n" +
+            "            \"timestamp\": \"2015-12-31T12:00:00.000Z\"" +
             "        }\n" +
             "    ]\n" +
             "}";
@@ -114,6 +115,9 @@ public class DiscordWebHookTest {
                                 new DiscordEmbedField("An embedded field", "This is an embedded field!")
                         })
         });
+        for (DiscordEmbed embed : discordWebHookPayload.getEmbeds()) {
+            embed.setTimestamp("2015-12-31T12:00:00.000Z");
+        }
         // Create DiscordWebHookProcessor
         DiscordWebHookProcessor discordWebHookProcessor = new DiscordWebHookProcessor();
         // Serialize the DiscordWebHookPayload into a JSON string
