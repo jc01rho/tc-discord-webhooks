@@ -16,6 +16,10 @@
 
 package com.github.playerforcehd.tcdiscordwebhooks.discord.embeds;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * A {@link DiscordEmbed} represents a Java object that contains every attribute
  * that can be applied to an embedded Discord message.
@@ -120,7 +124,11 @@ public class DiscordEmbed {
     //set timestamp from today
     public void setTimestamp() {
         // Formatted as 2015-12-31T12:00:00.000Z
-        setTimestamp(new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(new java.util.Date())); // Hacky way of doing it because im lazy
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String utcTime = sdf.format(new Date());
+
+        setTimestamp(utcTime); // Hacky way of doing it because im lazy
     }
 
     public void setTimestamp(String timestamp) {
